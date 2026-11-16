@@ -175,7 +175,3 @@ Compatible with all modern evergreen browsers supporting CSS 3D Transforms and E
 ## License
 
 This project is open-source and free to use, modify, and distribute.
-
-#   C u b e M e n u 
- 
- 
