@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Cubo · Menu Lateral</title>
+  <link rel="stylesheet" href="css/menu.css">
+</head>
+
+<body data-default-layout="sidebar">
+  <div id="bg" class="bg"></div>
+  <canvas id="fx" class="fx"></canvas>
+  <div id="overlay" class="overlay"></div>
+
+  <header class="topbar">
+    <div id="clock" class="clock">
+      <div class="clock-time" id="clockTime">--:--</div>
+      <div class="clock-date" id="clockDate"></div>
+    </div>
+    <div class="topbar-actions">
+      <div class="view-switch" id="viewSwitch" role="group" aria-label="Modo de visualização">
+        <button type="button" class="view-btn" data-layout="center" title="Cubo central (tecla V)">🧊 Central</button>
+        <button type="button" class="view-btn" data-layout="sidebar" title="Cubo no menu à esquerda (tecla V)">◧ Menu
+          lateral</button>
+      </div>
+      <a href="config.html" id="gear" class="gear" title="Configurações">⚙</a>
+    </div>
+  </header>
+
+  <div class="workspace" id="workspace">
+    <aside class="cube-pane" id="cubePane">
+      <div class="face-title" id="faceTitle"></div>
+      <div class="scene" id="scene">
+        <div class="cube" id="cube"></div>
+      </div>
+      <div class="bottom" id="bottom">
+        <div class="controls" id="controls">
+          <button data-act="left" title="Face à esquerda (←)">◀</button>
+          <button data-act="up" title="Face de cima (↑)">▲</button>
+          <button data-act="toggle" id="btnToggle" title="Pausar/retomar rotação (Espaço)">⏸</button>
+          <button data-act="down" title="Face de baixo (↓)">▼</button>
+          <button data-act="right" title="Face à direita (→)">▶</button>
+        </div>
+        <nav class="facenav" id="facenav"></nav>
+        <div class="hint" id="hint">Arraste para girar • setas • 1–6 • espaço pausa • V alterna visão</div>
+      </div>
+      <div class="side-list" id="sideList"></div>
+    </aside>
+
+    <section class="content-pane" id="contentPane">
+      <div class="content-head" id="contentHead"></div>
+      <div class="content-toolbar" id="contentToolbar">
+        <input type="search" id="searchInput" class="search-input" placeholder="🔎 Buscar atalho..." autocomplete="off">
+        <div class="scope-switch" id="scopeSwitch">
+          <button type="button" data-scope="face" class="active">Face atual</button>
+          <button type="button" data-scope="all">Todas as faces</button>
+        </div>
+      </div>
+      <div class="content-body" id="contentBody"></div>
+
+      <div class="embed-view hidden" id="embedView">
+        <div class="embed-bar" id="embedBar">
+          <div class="embed-info">
+            <span class="embed-ic" id="embedIc"></span>
+            <div class="embed-titles">
+              <div class="embed-title" id="embedTitle"></div>
+              <div class="embed-url" id="embedUrl"></div>
+            </div>
+          </div>
+          <div class="embed-actions">
+            <span class="embed-tip"
+              title="Caso o site bloqueie exibição embutida por segurança (X-Frame-Options), use o botão ao lado para abrir em nova aba.">ℹ
+              Embutido</span>
+            <button type="button" class="embed-btn" id="embedReload" title="Recarregar">↻ Recarregar</button>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="embed-btn" id="embedExternal"
+              title="Abrir em nova aba">Abrir em nova aba ↗</a>
+            <button type="button" class="embed-btn close" id="embedClose"
+              title="Fechar atalho embutido e voltar aos atalhos">✕ Fechar</button>
+          </div>
+        </div>
+        <div class="embed-frame-wrap">
+          <iframe id="embedFrame" class="embed-frame" src="about:blank" title="Atalho embutido"
+            allow="fullscreen; clipboard-read; clipboard-write; camera; microphone; autoplay;"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/store.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+
+</html>

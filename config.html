@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações · Menu Cubo</title>
+  <link rel="stylesheet" href="css/config.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo">🧊</span> Menu Cubo <small>Configurações</small></div>
+    <div class="top-actions">
+      <span id="status" class="status">Tudo salvo ✓</span>
+      <button id="togglePreview" class="btn ghost" title="Mostrar/ocultar pré-visualização">👁 Prévia</button>
+      <a href="index.html" class="btn primary">Abrir menu ↗</a>
+    </div>
+  </header>
+
+  <div class="layout" id="layout">
+    <!-- Navegação -->
+    <nav class="side" id="tabs">
+      <button class="tab active" data-tab="faces">🎲 Faces e atalhos</button>
+      <button class="tab" data-tab="background">🖼️ Fundo</button>
+      <button class="tab" data-tab="rotation">🔄 Rotação automática</button>
+      <button class="tab" data-tab="cube">🧊 Cubo e exibição</button>
+      <button class="tab" data-tab="backup">💾 Backup</button>
+    </nav>
+
+    <main class="main">
+
+      <!-- ================= FACES ================= -->
+      <section class="panel active" data-panel="faces">
+        <h2>Faces do cubo</h2>
+        <p class="muted">Selecione uma face para editar a aparência e os atalhos. Cada face funciona como um menu independente.</p>
+        <div class="face-chips" id="faceChips"></div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Aparência da face <span id="faceName" class="pill"></span></h3>
+            <div class="row-actions">
+              <select id="swapWith" title="Trocar conteúdo com outra face"><option value="">⇄ Trocar com…</option></select>
+              <button class="btn small" id="copyStyle" title="Aplica cores e estilo desta face a todas as outras">🎨 Estilo p/ todas</button>
+            </div>
+          </div>
+
+          <div class="grid2">
+            <label>Título<input type="text" data-fbind="title" maxlength="40"></label>
+            <label>Ícone (emoji)<input type="text" data-fbind="icon" maxlength="8"></label>
+          </div>
+
+          <div class="presets" id="presets" title="Paletas rápidas"></div>
+
+          <div class="grid3">
+            <label>Tipo de fundo
+              <select data-fbind="bgType">
+                <option value="solid">Cor sólida</option>
+                <option value="gradient">Gradiente</option>
+                <option value="image">Imagem</option>
+              </select>
+            </label>
+            <label>Cor principal<input type="color" data-fbind="bg1"></label>
+            <label data-fshow="bgType:gradient,image">Cor secundária<input type="color" data-fbind="bg2"></label>
+            <label data-fshow="bgType:gradient">Ângulo do gradiente <output></output><input type="range" min="0" max="360" step="5" data-fbind="angle"></label>
+            <label data-fshow="bgType:image" class="span2">URL da imagem<input type="url" data-fbind="bgImage" placeholder="https://…/imagem.jpg"></label>
+          </div>
+
+          <div class="grid3">
+            <label>Cor do texto<input type="color" data-fbind="textColor"></label>
+            <label>Cor dos atalhos<input type="color" data-fbind="tileColor"></label>
+            <label>Opacidade dos atalhos <output></output><input type="range" min="0" max="1" step="0.01" data-fbind="tileOpacity"></label>
+            <label>Cor da borda<input type="color" data-fbind="borderColor"></label>
+            <label>Opacidade da borda <output></output><input type="range" min="0" max="1" step="0.01" data-fbind="borderOpacity"></label>
+            <label>Espessura da borda <output></output><input type="range" min="0" max="10" step="1" data-fbind="borderWidth"></label>
+            <label>Arredondamento <output></output><input type="range" min="0" max="60" step="1" data-fbind="radius"></label>
+            <label>Colunas <output></output><input type="range" min="1" max="6" step="1" data-fbind="columns"></label>
+            <div class="checks">
+              <label class="check"><input type="checkbox" data-fbind="showLabels"> Mostrar nomes</label>
+              <label class="check"><input type="checkbox" data-fbind="inRotation"> Incluir na rotação por faces</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Atalhos <span id="scCount" class="pill"></span></h3>
+            <div class="row-actions wrap">
+              <select id="batchOpenMode" class="btn small" title="Definir ação de abertura para todos os atalhos desta face">
+                <option value="">⚡ Abertura p/ todos…</option>
+                <option value="tab">Nova aba ↗ (todos)</option>
+                <option value="self">Mesma janela ↩ (todos)</option>
+                <option value="embed">Embutir na tela ◧ (todos)</option>
+              </select>
+              <button class="btn small danger" id="clearShortcuts">🗑 Limpar</button>
+              <button class="btn small primary" id="addShortcut">＋ Adicionar atalho</button>
+            </div>
+          </div>
+          <p class="muted small">Arraste pela alça <b>⋮⋮</b> para reordenar. Escolha a ação ao clicar: <b>Nova aba</b>, <b>Mesma janela</b> ou <b>Embutir na tela</b> (migra p/ menu lateral com o atalho embutido no painel principal).</p>
+          <div id="shortcutList" class="sc-list"></div>
+        </div>
+      </section>
+
+      <!-- ================= FUNDO ================= -->
+      <section class="panel" data-panel="background">
+        <h2>Fundo da página</h2>
+        <div class="card">
+          <div class="grid3">
+            <label>Tipo
+              <select data-bind="background.type">
+                <option value="solid">Cor sólida</option>
+                <option value="gradient">Gradiente</option>
+                <option value="animated">Gradiente animado</option>
+                <option value="image">Imagem</option>
+              </select>
+            </label>
+            <label>Cor 1<input type="color" data-bind="background.color1"></label>
+            <label data-show="background.type:gradient,animated">Cor 2<input type="color" data-bind="background.color2"></label>
+            <label data-show="background.type:animated">Cor 3<input type="color" data-bind="background.color3"></label>
+            <label data-show="background.type:gradient,animated">Ângulo <output></output><input type="range" min="0" max="360" step="5" data-bind="background.angle"></label>
+            <label data-show="background.type:animated">Duração da animação (s) <output></output><input type="range" min="4" max="60" step="1" data-bind="background.animSpeed"></label>
+            <label data-show="background.type:image" class="span2">URL da imagem<input type="url" data-bind="background.image" placeholder="https://…/wallpaper.jpg"></label>
+            <label data-show="background.type:image">Ajuste
+              <select data-bind="background.imageFit">
+                <option value="cover">Cobrir</option>
+                <option value="contain">Conter</option>
+                <option value="repeat">Repetir (mosaico)</option>
+              </select>
+            </label>
+            <label data-show="background.type:image">Desfoque <output></output><input type="range" min="0" max="20" step="1" data-bind="background.blur"></label>
+          </div>
+          <div class="bg-presets" id="bgPresets"></div>
+        </div>
+
+        <div class="card">
+          <h3>Camada e efeitos</h3>
+          <div class="grid3">
+            <label>Cor da sobreposição<input type="color" data-bind="background.overlayColor"></label>
+            <label>Opacidade da sobreposição <output></output><input type="range" min="0" max="1" step="0.01" data-bind="background.overlayOpacity"></label>
+            <label>Efeito animado
+              <select data-bind="background.effect">
+                <option value="none">Nenhum</option>
+                <option value="stars">Estrelas</option>
+                <option value="bubbles">Bolhas</option>
+              </select>
+            </label>
+            <label data-show="background.effect:stars,bubbles">Cor do efeito<input type="color" data-bind="background.effectColor"></label>
+            <label data-show="background.effect:stars,bubbles">Densidade <output></output><input type="range" min="10" max="400" step="10" data-bind="background.effectDensity"></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ROTAÇÃO ================= -->
+      <section class="panel" data-panel="rotation">
+        <h2>Rotação automática</h2>
+        <div class="card">
+          <label class="check big"><input type="checkbox" data-bind="rotation.autoRotate"> Ativar rotação automática</label>
+          <div class="grid3" data-show="rotation.autoRotate:true">
+            <label>Modo
+              <select data-bind="rotation.mode">
+                <option value="continuous">Contínua (gira suavemente)</option>
+                <option value="steps">Por faces (pula de face em face)</option>
+              </select>
+            </label>
+            <label>Sentido
+              <select data-bind="rotation.direction" data-type="number">
+                <option value="1">Para a direita →</option>
+                <option value="-1">Para a esquerda ←</option>
+              </select>
+            </label>
+            <label data-show="rotation.mode:continuous">Velocidade (°/s) <output></output><input type="range" min="1" max="120" step="1" data-bind="rotation.speed"></label>
+            <label data-show="rotation.mode:continuous">Inclinação vertical (°) <output></output><input type="range" min="-60" max="60" step="1" data-bind="rotation.tilt"></label>
+            <label data-show="rotation.mode:continuous" class="check"><input type="checkbox" data-bind="rotation.wobble"> Oscilar inclinação</label>
+            <label data-show="rotation.mode:continuous">Amplitude da oscilação (°) <output></output><input type="range" min="0" max="40" step="1" data-bind="rotation.wobbleAmp"></label>
+            <label data-show="rotation.mode:steps">Tempo em cada face (s) <output></output><input type="range" min="1" max="30" step="0.5" data-bind="rotation.stepInterval"></label>
+            <label class="check"><input type="checkbox" data-bind="rotation.pauseOnHover"> Pausar com o mouse sobre o cubo</label>
+            <label>Retomar após inatividade (s) <output></output><input type="range" min="0" max="60" step="1" data-bind="rotation.resumeDelay"></label>
+          </div>
+          <p class="muted small" data-show="rotation.mode:steps">Escolha quais faces participam marcando “Incluir na rotação por faces” na aba <b>Faces e atalhos</b>.</p>
+        </div>
+
+        <div class="card">
+          <h3>Interação manual</h3>
+          <div class="grid3">
+            <label class="check"><input type="checkbox" data-bind="rotation.snap"> Encaixar na face mais próxima ao soltar</label>
+            <label>Duração da transição (ms) <output></output><input type="range" min="150" max="3000" step="50" data-bind="rotation.transitionMs"></label>
+            <label>Sensibilidade do arraste <output></output><input type="range" min="0.1" max="1.5" step="0.05" data-bind="rotation.dragSensitivity"></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CUBO ================= -->
+      <section class="panel" data-panel="cube">
+        <h2>Cubo e exibição</h2>
+        <div class="card">
+          <div class="card-head">
+            <h3>Visualização e Menu Lateral</h3>
+            <a href="lateral.html" class="btn small">Abrir menu lateral ↗</a>
+          </div>
+          <div class="grid3">
+            <label>Visualização padrão
+              <select data-bind="page.layout">
+                <option value="center">Cubo central</option>
+                <option value="sidebar">Menu à esquerda / lateral</option>
+              </select>
+            </label>
+            <label>Ação padrão ao clicar no atalho
+              <select data-bind="page.defaultOpenMode">
+                <option value="tab">Abrir em nova aba (↗)</option>
+                <option value="self">Abrir na própria janela (↩)</option>
+                <option value="embed">Migrar para menu lateral e embutir (◧)</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" data-bind="page.showLayoutToggle"> Mostrar botão de alternar visualização</label>
+          </div>
+          <div class="grid3" data-show="page.layout:sidebar">
+            <label>Posição do menu lateral
+              <select data-bind="sidebar.position">
+                <option value="left">Esquerda</option>
+                <option value="right">Direita</option>
+              </select>
+            </label>
+            <label>Largura do menu (px) <output></output><input type="range" min="260" max="520" step="10" data-bind="sidebar.width"></label>
+            <label>Tamanho do cubo lateral (px) <output></output><input type="range" min="140" max="340" step="10" data-bind="sidebar.cubeSize"></label>
+            <label>Colunas no painel principal
+              <select data-bind="sidebar.contentColumns" data-type="number">
+                <option value="0">Automático</option>
+                <option value="1">1 coluna</option>
+                <option value="2">2 colunas</option>
+                <option value="3">3 colunas</option>
+                <option value="4">4 colunas</option>
+                <option value="5">5 colunas</option>
+                <option value="6">6 colunas</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" data-bind="sidebar.glass"> Efeito vidro fosco</label>
+            <label class="check"><input type="checkbox" data-bind="sidebar.cubeLabels"> Mostrar nomes dentro do cubo menor</label>
+            <label class="check"><input type="checkbox" data-bind="sidebar.showList"> Mostrar lista rápida abaixo do cubo</label>
+            <label class="check"><input type="checkbox" data-bind="sidebar.showContent"> Mostrar painel principal de atalhos</label>
+            <label class="check"><input type="checkbox" data-bind="sidebar.followRotation"> Painel acompanha rotação automática</label>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Cubo</h3>
+          <div class="grid3">
+            <label>Tamanho (px) <output></output><input type="range" min="200" max="700" step="10" data-bind="cube.size"></label>
+            <label>Perspectiva (px) <output></output><input type="range" min="400" max="4000" step="50" data-bind="cube.perspective"></label>
+            <label>Opacidade das faces <output></output><input type="range" min="0.3" max="1" step="0.01" data-bind="cube.faceOpacity"></label>
+            <label>Separação das faces (px) <output></output><input type="range" min="0" max="120" step="2" data-bind="cube.gap"></label>
+            <label class="check"><input type="checkbox" data-bind="cube.glow"> Brilho colorido nas faces</label>
+            <label data-show="cube.glow:true">Intensidade do brilho <output></output><input type="range" min="0" max="150" step="5" data-bind="cube.glowStrength"></label>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Página</h3>
+          <div class="grid3">
+            <label class="span2">Título da aba do navegador<input type="text" data-bind="page.title"></label>
+            <label class="check"><input type="checkbox" data-bind="page.showClock"> Mostrar relógio</label>
+            <label class="check"><input type="checkbox" data-bind="page.showNav"> Mostrar navegação de faces</label>
+            <label class="check"><input type="checkbox" data-bind="page.showControls"> Mostrar botões de controle</label>
+            <label class="check"><input type="checkbox" data-bind="page.showHint"> Mostrar dica de uso</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= BACKUP ================= -->
+      <section class="panel" data-panel="backup">
+        <h2>Backup e restauração</h2>
+        <div class="card">
+          <div class="row-actions wrap">
+            <button class="btn primary" id="exportBtn">⬇ Exportar configuração (.json)</button>
+            <label class="btn">⬆ Importar arquivo<input type="file" id="importFile" accept=".json,application/json" hidden></label>
+            <button class="btn danger" id="resetBtn">↺ Restaurar padrão</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>Editar JSON</h3>
+            <div class="row-actions">
+              <button class="btn small" id="refreshJson">↻ Recarregar</button>
+              <button class="btn small primary" id="applyJson">✔ Aplicar JSON</button>
+            </div>
+          </div>
+          <textarea id="jsonBox" spellcheck="false"></textarea>
+        </div>
+      </section>
+    </main>
+
+    <!-- Pré-visualização -->
+    <aside class="preview" id="previewPane">
+      <div class="preview-head">Pré-visualização ao vivo</div>
+      <iframe id="previewFrame" src="index.html?preview=1" title="Pré-visualização do menu"></iframe>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/config.js"></script>
+</body>
+</html>
+
