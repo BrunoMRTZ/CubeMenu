@@ -92,14 +92,16 @@ body.layout-center .side-list {
 .scene {
   width: var(--size, 380px); height: var(--size, 380px);
   perspective: var(--persp, 1400px);
+  transform-style: preserve-3d;
   touch-action: none; cursor: grab; user-select: none;
 }
 .scene.dragging { cursor: grabbing; }
-.cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; will-change: transform; }
+.cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
 
 .face {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  will-change: transform;
   border-radius: var(--radius, 18px);
   border: var(--bw, 1px) solid var(--border, rgba(255,255,255,.35));
   color: var(--text, #fff);

@@ -234,10 +234,14 @@
     } catch { return ''; }
   }
 
-  function faceBackground(f) {
-    if (f.bgType === 'solid') return f.bg1;
+  function faceBackground(f, alpha = 1) {
+    const a = Math.max(0, Math.min(1, Number(alpha ?? 1)));
+    if (f.bgType === 'solid') return a < 1 ? hexToRgba(f.bg1, a) : f.bg1;
     if (f.bgType === 'image' && f.bgImage) {
-      return `linear-gradient(${hexToRgba(f.bg1, 0.55)}, ${hexToRgba(f.bg2, 0.55)}), url("${f.bgImage}") center / cover no-repeat`;
+      return `linear-gradient(${hexToRgba(f.bg1, 0.55 * a)}, ${hexToRgba(f.bg2, 0.55 * a)}), url("${f.bgImage}") center / cover no-repeat`;
+    }
+    if (a < 1) {
+      return `linear-gradient(${f.angle}deg, ${hexToRgba(f.bg1, a)}, ${hexToRgba(f.bg2, a)})`;
     }
     return `linear-gradient(${f.angle}deg, ${f.bg1}, ${f.bg2})`;
   }

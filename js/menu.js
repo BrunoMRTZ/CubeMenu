@@ -38,6 +38,15 @@
     front: [0, 0, 1], right: [1, 0, 0], back: [0, 0, -1],
     left: [-1, 0, 0], top: [0, -1, 0], bottom: [0, 1, 0]
   };
+  const FACE_BASE_TRANSFORM = {
+    front:  'translateZ(var(--half))',
+    right:  'rotateY(90deg) translateZ(var(--half))',
+    back:   'rotateY(180deg) translateZ(var(--half))',
+    left:   'rotateY(-90deg) translateZ(var(--half))',
+    top:    'rotateX(90deg) translateZ(var(--half))',
+    bottom: 'rotateX(-90deg) translateZ(var(--half))'
+  };
+  let faceEls = {};
 
   let rx = cfg.rotation.tilt, ry = 25;
   let tween = null;
@@ -106,6 +115,25 @@
       const z1 = -nx * Math.sin(b) + nz * Math.cos(b);
       const z = ny * Math.sin(a) + z1 * Math.cos(a);
       if (z > bestZ) { bestZ = z; best = id; }
+    }
+    return best;
+  }
+
+  function updateCubeTransforms() {
+    const a = rad(rx), b = rad(ry);
+    let best = 'front', bestZ = -Infinity;
+    const rotPrefix = `rotateX(${rx}deg) rotateY(${ry}deg) `;
+    for (const id of MC.FACE_IDS) {
+      const [nx, ny, nz] = NORMALS[id];
+      const z1 = -nx * Math.sin(b) + nz * Math.cos(b);
+      const z = ny * Math.sin(a) + z1 * Math.cos(a);
+      if (z > bestZ) { bestZ = z; best = id; }
+      const el = faceEls[id];
+      if (el) {
+        el.style.transform = rotPrefix + FACE_BASE_TRANSFORM[id];
+        el.style.pointerEvents = z > 0.05 ? 'auto' : 'none';
+        el.style.zIndex = String(Math.round((z + 1) * 100));
+      }
     }
     return best;
   }
@@ -194,10 +222,8 @@
       autoVel = 0; stepTimer = 0;
     }
 
-    els.cube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-
     const isAutoMove = !dragging && ((tween && tween.fromAuto) || (!tween && autoActive(now)));
-    const f = detectFace();
+    const f = updateCubeTransforms();
     if (f !== currentFace) {
       currentFace = f;
       if ((!tween || !tween.targetId) && (!isAutoMove || cfg.sidebar.followRotation)) activePanelFace = f;
@@ -234,12 +260,13 @@
     const C = cfg.cube;
     const isSide = cfg.page.layout === 'sidebar';
     els.cube.innerHTML = '';
+    els.cube.style.transform = '';
+    faceEls = {};
     for (const f of cfg.faces) {
       const el = document.createElement('section');
       el.className = 'face face-' + f.id;
       el.dataset.face = f.id;
-      el.style.background = MC.faceBackground(f);
-      el.style.opacity = C.faceOpacity;
+      el.style.background = MC.faceBackground(f, C.faceOpacity);
       el.style.setProperty('--text', f.textColor);
       el.style.setProperty('--tile', MC.hexToRgba(f.tileColor, f.tileOpacity));
       el.style.setProperty('--tile-hover', MC.hexToRgba(f.tileColor, Math.min(1, f.tileOpacity + 0.15)));
@@ -264,7 +291,9 @@
       el.innerHTML = `<div class="face-head"><span class="fi">${esc(f.icon)}</span><span>${esc(f.title)}</span></div>
         <div class="grid">${tiles || '<div class="empty">Nenhum atalho.<br>Adicione em ⚙ Configurações.</div>'}</div>`;
       els.cube.appendChild(el);
+      faceEls[f.id] = el;
     }
+    updateCubeTransforms();
   }
 
   function renderNav() {
